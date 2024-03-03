@@ -198,7 +198,8 @@ class BigramLanguageModel(nn.Module):
             # focus only on the last time step
             logits = logits[:, -1, :] # becomes (B, C)
             # apply softmax to get probabilities
-            probs = nn.softmax(logits, axis=-1) # (B, C)
+            # probs = nn.softmax(logits, axis=-1) # (B, C)
+            probs = logits
             # sample from the distribution
             idx_next = mx.random.categorical(probs, axis=-1, num_samples=1)
             # append sampled index to the running sequence
@@ -278,9 +279,10 @@ def generate(model, idx, max_new_tokens):
         # focus only on the last time step
         logits = logits[:, -1, :] # becomes (B, C)
         # apply softmax to get probabilities
-        probs = nn.softmax(logits, axis=-1) # (B, C)
+        # probs = nn.softmax(logits, axis=-1) # (B, C)
+        probs = logits
         # sample from the distribution
-        idx_next = mx.random.categorical(probs, axis=-1, num_samples=10)
+        idx_next = mx.random.categorical(probs, axis=-1, num_samples=1)
         # append sampled index to the running sequence
         idx = mx.concatenate((idx, idx_next), axis=1) # (B, T+1)
     return idx
